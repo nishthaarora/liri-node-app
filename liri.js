@@ -52,7 +52,7 @@ function getTwitterTweets () {
 
 		var keys = require('./keys.js');
 		var twitterKey = keys.twitterKeys;
-		var twitter = require('twitter');
+		var Twitter = require('twitter');
 
 		var client = new Twitter ({
 			consumer_key: twitterKey.consumer_key,
