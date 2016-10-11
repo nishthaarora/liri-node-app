@@ -1,31 +1,30 @@
 var inquirer = require('inquirer');
-// var inputString = process.argv;
-// var fs = require('fs');
-// var arr =[];
-// var answer = process.argv[2];
+var userChoice = process.argv[2];
+var userInput = process.argv[3];
 
-inquirer.prompt([
+// inquirer.prompt([
 
-	{
-		type: 'list',
-		name: 'userChoice',
-		message: 'Please select one of the following options',
-		choices: [
-				'my-tweets',
-				'spotify-this-song',
-				'movie-this',
-				'do-what-it-says'
-			]
-			// validate: function(answer) {
-			// 	if(answer === "my-tweets") {
-			// 		return true;
-			// 	}
-			// 	return 'Not valid';
-			// }
-	}
+// 	{
+// 		type: 'list',
+// 		name: 'userChoice',
+// 		message: 'Please select one of the following options',
+// 		choices: [
+// 				'my-tweets',
+// 				'spotify-this-song',
+// 				'movie-this',
+// 				'do-what-it-says'
+// 			]
+// 			// validate: function(answer) {
+// 			// 	if(answer === "my-tweets") {
+// 			// 		return true;
+// 			// 	}
+// 			// 	return 'Not valid';
+// 			// }
+// 	}
 
-]).then(function(answer) {
-	switch (answer.userChoice) {
+// ]).then(function(answer) {
+	// switch (answer.userChoice) {
+	switch (userChoice) {
 		case 'my-tweets':
 			getTwitterTweets();
 			break;
@@ -39,7 +38,7 @@ inquirer.prompt([
 		default:
 			text = "Please select correct answer"
 	}
-});
+// });
 
 function getTwitterTweets() {
 
@@ -76,13 +75,20 @@ function getTwitterTweets() {
 function getSpotifySong () {
 
 	var spotify = require('spotify');
-	var track =
-	spotify.search({ type: 'track', query: 'dancing in the moonlight' }, function(err, data) {
+	// var song = [];
+
+	// 	for(var i=3; i<process.argv.length; i++) {
+	// 		song.push(process.argv[i]);
+	// }
+
+	// var songString = song.join('');
+
+spotify.search({ type: 'track', query: userInput || 'dancing in the moonlight' }, function(err, data) {
+	console.log(data);
     if ( err ) {
         console.log('Error occurred: ' + err);
         return;
     }
-
     // Do something with 'data'
 });
 
