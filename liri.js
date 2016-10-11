@@ -1,9 +1,6 @@
-// var twitter = require('twitter');
-// var keys = require('./keys.js');
-// var twitterKey = keys.twitterKeys;
 var inquirer = require('inquirer');
-var inputString = process.argv;
-var fs = require('fs');
+// var inputString = process.argv;
+// var fs = require('fs');
 // var arr =[];
 // var answer = process.argv[2];
 
@@ -33,6 +30,7 @@ inquirer.prompt([
 			getTwitterTweets();
 			break;
 		case "spotify-this-song":
+			getSpotifySong();
 			break;
 		case "movie-this":
 			break;
@@ -43,45 +41,51 @@ inquirer.prompt([
 	}
 });
 
+function getTwitterTweets() {
 
+	var keys = require('./keys.js');
+	var twitterKey = keys.twitterKeys;
+	var Twitter = require('twitter');
+	var moment = require('moment');
 
+	var client = new Twitter({
+		consumer_key: twitterKey.consumer_key,
+		consumer_secret: twitterKey.consumer_secret,
+		access_token_key: twitterKey.access_token_key,
+		access_token_secret: twitterKey.access_token_secret
+	});
 
+	var params = {
+		screen_name: 'nishthaarora',
+		count: 20
+	}
 
-function getTwitterTweets () {
+	client.get('statuses/user_timeline', params, function(error, tweets, response) {
+		if (error) {
+			console.log(error);
+		}
 
-
-		var keys = require('./keys.js');
-		var twitterKey = keys.twitterKeys;
-		var Twitter = require('twitter');
-
-		var client = new Twitter ({
-			consumer_key: twitterKey.consumer_key,
-			consumer_secret: twitterKey.consumer_secret,
-			access_token_key: twitterKey.access_token_key,
-		  access_token_secret : twitterKey.access_token_secret
-		});
-
-			var params = {
-				screen_name: 'nishthaarora'
-				// q: 'github.com/',
-				// result_type: recent,
-				// count: 20
-			};
-
-				client.get('statuses/user_timeline', params, function(error, tweets, response) {
-					console.log('test');
-					if (!error) {
-    					console.log(tweets);
-  						}
-
-					// console.log('no error');
-					// // console.log(JSON.stringify(tweets, null, 2));
-					// console.log(tweets);  // The favorites.
-					// console.log(response);  // Raw response object.
-
-				});
-			// }
+		for(var i=0; i<tweets.length; i++) {
+			var date = moment(tweets[i].created_at).format('MM/DD/YYYY');
+			console.log('date: ' + date +' tweet: ' + tweets[i].text);
+		}
+	});
 }
 
+
+function getSpotifySong () {
+
+	var spotify = require('spotify');
+	var track =
+	spotify.search({ type: 'track', query: 'dancing in the moonlight' }, function(err, data) {
+    if ( err ) {
+        console.log('Error occurred: ' + err);
+        return;
+    }
+
+    // Do something with 'data'
+});
+
+}
 
 
