@@ -2,28 +2,6 @@ var inquirer = require('inquirer');
 var userChoice = process.argv[2];
 var userInput = process.argv.slice(3,process.argv.length).join(' ');
 
-// inquirer.prompt([
-
-// 	{
-// 		type: 'list',
-// 		name: 'userChoice',
-// 		message: 'Please select one of the following options',
-// 		choices: [
-// 				'my-tweets',
-// 				'spotify-this-song',
-// 				'movie-this',
-// 				'do-what-it-says'
-// 			]
-// 			// validate: function(answer) {
-// 			// 	if(answer === "my-tweets") {
-// 			// 		return true;
-// 			// 	}
-// 			// 	return 'Not valid';
-// 			// }
-// 	}
-
-// ]).then(function(answer) {
-// switch (answer.userChoice) {
 	function callUserChoice(userChoice, userInput) {
 switch (userChoice) {
 	case 'my-tweets':
@@ -63,12 +41,15 @@ function getTwitterTweets() {
 	}
 
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
+
 		if (error) {
 			console.log(error);
 		}
 
 		for (var i = 0; i < tweets.length; i++) {
-			var date = moment(tweets[i].created_at).format('MM/DD/YYYY');
+			var created = moment(tweets[i].created_at, 'ddd, MMM DD HH:mm:ss ZZ YYYY');
+			var date = moment(created).format('MM/DD/YYYY');
+			console.log('\n*********************   Tweets   ************************\n')
 			console.log('date: ' + date + ' tweet: ' + tweets[i].text);
 		}
 	});
@@ -81,7 +62,7 @@ function getSpotifySong(userInput) {
 
 	spotify.search({
 		type: 'track',
-		query: userInput || '"The Sign"',
+		query: userInput || "The Sign",
 		limit: 1
 	}, function(err, data) {
 		if (err) {
@@ -106,7 +87,7 @@ function getMovies(userInput) {
 
 	var request = require('request');
 
-	userInput = userInput || 'forrest gump';
+	userInput = userInput || 'mr. nobody';
 
 	request('http://www.omdbapi.com/?t=' + userInput + '&y=&plot=short&tomatoes=true&r=json', function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
@@ -131,32 +112,17 @@ function doAsItSays () {
 
 	var fs = require('fs');
 
-		// fs.writeFile('random.txt', 'I Want it That Way', (err) => {
-		// 	if(err) throw err;
-		// 	console.log('Saved');
-		// 	return;
-		// })
-
 		fs.readFile('random.txt', {encoding: 'utf8'}, (err, data) => {
 			if(err) throw err;
-			console.log(data);
-			var textInput = data.split(',');
+			var multipleInput = data.split('\n');
 
-			callUserChoice( textInput[0], textInput[1] );
+			multipleInput.forEach(function(ele) {
+				var textInput = ele.split(',');
+					callUserChoice( textInput[0], textInput[1] );
+			})
 
 		})
 
-// 		for(var i=3; i<process.argv.length; i++) {
-
-// 		fs.appendFile('random.txt\n', process.argv[i] , (err, data) => {
-// 			if(err) throw err;
-// 			console.log(data);
-// 			if(data === 'inception') {
-// 				getMovies();
-// 			}
-// 		})
-// }
-
 }
 
-callUserChoice( userChoice, userInput);
+callUserChoice( userChoice, userInput );
